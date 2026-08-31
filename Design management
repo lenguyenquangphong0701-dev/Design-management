@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QUẢN LÝ THIẾT KẾ & THI CÔNG | Design by Lê Nguyễn Quang Phong</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-surface: #151c2c;
+      --bg-card: #1e293b;
+      --bg-card-hover: #273549;
+      --accent-primary: #38bdf8;
+      --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --text-main: #f8fafc;
+      --text-sub: #94a3b8;
+      --border-color: #334155;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    .header { height: 60px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 100; flex-shrink: 0; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 38px; height: 38px; background: var(--accent-gradient); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+    .brand-titles h1 { font-size: 15px; font-weight: 800; color: #fff; }
+    .brand-titles p { font-size: 13px; font-weight: 700; font-style: italic; color: var(--accent-primary); }
+
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .search-box { position: relative; width: 280px; }
+    .search-box input { width: 100%; padding: 8px 12px 8px 34px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 20px; color: #fff; font-size: 12px; outline: none; }
+    .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-sub); font-size: 12px; }
+    .btn-mobile-toggle { display: none; padding: 8px 12px; background: var(--accent-gradient); border: none; border-radius: var(--radius-md); color: white; font-weight: 700; font-size: 12px; cursor: pointer; }
+    .main-body { display: flex; flex: 1; height: calc(100vh - 60px); position: relative; overflow: hidden; }
+    .sidebar { width: 440px; background-color: var(--bg-surface); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; z-index: 90; transition: transform 0.3s; }
+    
+    .segment-nav { display: flex; padding: 6px; background: rgba(15, 23, 42, 0.6); margin: 10px 12px 6px 12px; border-radius: var(--radius-lg); gap: 4px; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .segment-btn { flex: 1; padding: 8px 4px; border: none; background: transparent; color: var(--text-sub); font-size: 10.5px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .segment-btn.active { background: var(--accent-gradient); color: white; }
+    
+    .timeline-bar { display: flex; gap: 6px; padding: 0 12px 8px 12px; overflow-x: auto; border-bottom: 1px solid rgba(255, 255, 255, 0.05); margin-bottom: 8px; }
+    .time-chip { padding: 4px 10px; background: rgba(30, 41, 59, 0.6); border: 1px solid var(--border-color); border-radius: 12px; font-size: 10px; font-weight: 700; color: var(--text-sub); white-space: nowrap; cursor: pointer; }
+    .time-chip.active { background: rgba(129, 140, 248, 0.2); border-color: #818cf8; color: #a5b4fc; }
+    .list-container { flex: 1; overflow-y: auto; padding: 0 12px 20px 12px; }
+    .tree-filter-bar { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 8px 0; margin-bottom: 6px; }
+    .tree-chip { padding: 5px 10px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; font-size: 11px; font-weight: 600; color: var(--text-sub); white-space: nowrap; cursor: pointer; }
+    .tree-chip.active { border-color: var(--accent-primary); color: var(--accent-primary); background: rgba(56, 189, 248, 0.1); }
+    
+    .tree-folder { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
+    .folder-header { padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
+    .folder-header:hover { background: var(--bg-card-hover); }
+    .folder-title-box { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; flex: 1; overflow: hidden; }
+    .folder-title-box i.arrow { transition: transform 0.2s; color: var(--text-sub); font-size: 11px; }
+    .tree-folder.open .folder-header i.arrow { transform: rotate(90deg); }
+    .folder-actions-btns { display: flex; align-items: center; gap: 4px; }
+    .folder-content { display: none; padding: 6px 10px 10px 24px; border-top: 1px solid rgba(255, 255, 255, 0.05); background: rgba(15, 23, 42, 0.3); }
+    .tree-folder.open .folder-content { display: block; }
+    
+    .item-card { background-color: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; margin-top: 6px; cursor: pointer; transition: all 0.2s; position: relative; }
+    .item-card:hover { border-color: var(--accent-primary); transform: translateX(3px); }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px; padding-right: 20px; }
+    .card-code { font-size: 10.5px; font-weight: 700; color: var(--accent-primary); font-family: monospace; }
+    
+    .status-tag { padding: 2px 7px; border-radius: 12px; font-size: 9.5px; font-weight: 800; text-transform: uppercase; }
+    .tag-a { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-b { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-c { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    .card-meta-grid { display: flex; gap: 12px; font-size: 10.5px; color: var(--text-sub); margin-top: 4px; }
+    .btn-add-floating { margin: 10px 12px; padding: 12px; background: var(--accent-gradient); border: none; border-radius: var(--radius-md); color: white; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    
+    .btn-delete-item { position: absolute; top: 8px; right: 8px; color: var(--text-sub); font-size: 12px; padding: 4px 6px; border-radius: 4px; transition: all 0.2s; }
+    .btn-delete-item:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.15); }
+    
+    .btn-add-rev { color: var(--accent-primary); font-size: 13px; padding: 4px 8px; border-radius: 6px; transition: all 0.2s; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.2); }
+    .btn-add-rev:hover { background: var(--accent-gradient); color: white; }
+    .btn-delete-folder { color: var(--text-sub); font-size: 12px; padding: 4px 8px; border-radius: 4px; transition: all 0.2s; }
+    .btn-delete-folder:hover { color: var(--accent-danger); background: rgba(239, 68, 68, 0.15); }
+
+    .viewer-area { flex: 1; display: flex; flex-direction: column; background-color: #050811; position: relative; }
+    .viewer-bar { height: 50px; background-color: var(--bg-surface); border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; }
+    .doc-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .doc-name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .control-tools { display: flex; align-items: center; gap: 6px; }
+    .tool-btn { height: 36px; padding: 0 12px; border-radius: 8px; background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; font-weight: 600; text-decoration: none; }
+    .tool-btn:hover { background: var(--border-color); }
+    .canvas-viewport { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+    #viewFrame, #imgViewer { width: 100%; height: 100%; border: none; background: white; object-fit: contain; }
+    
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(5, 8, 17, 0.85); backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; padding: 16px; }
+    .modal-box { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); width: 100%; max-width: 500px; padding: 24px; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-size: 16px; font-weight: 800; margin-bottom: 16px; color: var(--text-main); display: flex; align-items: center; justify-content: space-between; }
+    .form-field { margin-bottom: 14px; }
+    .form-field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-sub); margin-bottom: 6px; }
+    .form-field input, .form-field select { width: 100%; padding: 12px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); color: white; font-size: 13px; outline: none; }
+    
+    #loadingSpinner { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2000; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 12px; border: 1px solid var(--border-color); text-align: center; }
+
+    @media (max-width: 768px) {
+      .btn-mobile-toggle { display: block; }
+      .search-box { width: 140px; }
+      .sidebar { position: absolute; top: 0; bottom: 0; left: 0; width: 100%; transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon"><i class="fa-solid fa-layer-group"></i></div>
+      <div class="brand-titles">
+        <h1>QUẢN LÝ THIẾT KẾ & THI CÔNG</h1>
+        <p>Design by Lê Nguyễn Quang Phong</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" onkeyup="filterCards()" placeholder="Tìm mã, tên, rev, bộ môn...">
+      </div>
+      <button class="btn-mobile-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-list-check"></i> Menu</button>
+    </div>
+  </header>
+
+  <div class="main-body">
+    <aside class="sidebar" id="mainSidebar">
+      <div class="segment-nav">
+        <button class="segment-btn active" onclick="switchSegment('designTab', this)"><i class="fa-solid fa-compass-drafting"></i> Thiết Kế</button>
+        <button class="segment-btn" onclick="switchSegment('shopTab', this)"><i class="fa-solid fa-hammer"></i> Shop Drawing</button>
+        <button class="segment-btn" onclick="switchSegment('bptcTab', this)"><i class="fa-solid fa-person-digging"></i> Biện Pháp Thi Công</button>
+      </div>
+      
+      <div class="timeline-bar">
+        <div class="time-chip active" onclick="filterByTime('all', this)"><i class="fa-solid fa-globe"></i> Tất cả</div>
+        <div class="time-chip" onclick="filterByTime('2026-08', this)">Tháng 08/2026</div>
+        <div class="time-chip" onclick="filterByTime('2026-03', this)">Tháng 03/2026</div>
+        <div class="time-chip" onclick="filterByTime('2026-02', this)">Tháng 02/2026</div>
+      </div>
+      
+      <div style="padding: 0 12px;">
+        <div class="tree-filter-bar">
+          <div class="tree-chip active" onclick="filterByBranch('all', this)"><i class="fa-solid fa-border-all"></i> Tất cả</div>
+          <div class="tree-chip" onclick="filterByBranch('KT', this)">Kiến Trúc</div>
+          <div class="tree-chip" onclick="filterByBranch('KC', this)">Kết Cấu</div>
+          <div class="tree-chip" onclick="filterByBranch('MEP', this)">Cơ Điện MEP</div>
+        </div>
+      </div>
+
+      <div id="designTab" class="list-container">
+        <button class="btn-add-floating" onclick="openUploadModal('design')"><i class="fa-solid fa-cloud-arrow-up"></i> Up Hồ Sơ Thiết Kế Lên Cloud</button>
+        <div id="designListContent"></div>
+      </div>
+
+      <div id="shopTab" class="list-container" style="display:none;">
+        <button class="btn-add-floating" onclick="openUploadModal('shop')"><i class="fa-solid fa-cloud-arrow-up"></i> Up Shop Drawing Lên Cloud</button>
+        <div id="shopListContent"></div>
+      </div>
+
+      <div id="bptcTab" class="list-container" style="display:none;">
+        <button class="btn-add-floating" onclick="openUploadModal('bptc')"><i class="fa-solid fa-cloud-arrow-up"></i> Up BPTC Lên Cloud</button>
+        <div id="bptcListContent"></div>
+      </div>
+    </aside>
+
+    <main class="viewer-area">
+      <div class="viewer-bar">
+        <div class="doc-info">
+          <i class="fa-solid fa-file-contract" style="color:var(--accent-primary);"></i>
+          <div class="doc-name" id="currentDocTitle">Chọn bản vẽ để xem</div>
+        </div>
+        <div class="control-tools">
+          <a id="downloadBtn" href="#" target="_blank" class="tool-btn" style="display:none;">
+            <i class="fa-solid fa-download"></i> Tải File
+          </a>
+        </div>
+      </div>
+      <div class="canvas-viewport">
+        <iframe id="viewFrame" src="about:blank" style="display:none;"></iframe>
+        <img id="imgViewer" src="" style="display:none;" />
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="uploadModal">
+    <div class="modal-box">
+      <div class="modal-title">
+        <span id="modalHeaderTitle">Đăng Ký Hồ Sơ / Rev Mới</span>
+        <i class="fa-solid fa-xmark" style="cursor:pointer;" onclick="closeUploadModal()"></i>
+      </div>
+      <div class="form-field"><label>Ngày Phát Hành</label><input type="date" id="inputDate" value="2026-08-31"></div>
+      <div class="form-field">
+        <label>Bộ Môn</label>
+        <select id="inputBranch"><option value="KT">Kiến Trúc</option><option value="KC">Kết Cấu</option><option value="MEP">Cơ Điện</option></select>
+      </div>
+      <div class="form-field"><label>Tên / Mã Mục To (Folder)</label><input type="text" id="inputCode" placeholder="Ví dụ: BPTC-TC-01: Biện Pháp Thi Công Đổ Bê Tông Sàn"></div>
+      <div class="form-field"><label>Tùy Chọn Nhập Rev / Lần Nộp</label><input type="text" id="inputRev" placeholder="Ví dụ: Rev 01, Rev 02..."></div>
+      <div class="form-field">
+        <label>Kết Quả Phê Duyệt</label>
+        <select id="inputStatus">
+          <option value="tag-a">Duyệt A (Chính thức)</option>
+          <option value="tag-b">Duyệt B (Chỉnh sửa & Nộp lại)</option>
+          <option value="tag-c">Duyệt C (Từ chối / Nộp lại)</option>
+        </select>
+      </div>
+      <div class="form-field"><label>Ghi Chú Chi Tiết</label><input type="text" id="inputName" placeholder="Nội dung điều chỉnh..."></div>
+      
+      <div class="form-field">
+        <label>Tải File Bản Vẽ Trực Tiếp (PDF hoặc Ảnh)</label>
+        <input type="file" id="inputFile" accept="application/pdf, image/*">
+      </div>
+
+      <button class="btn-add-floating" style="width:100%; margin: 10px 0 0 0;" onclick="saveNewDocument()">Lưu Bản Vẽ Lên Cloud vĩnh viễn</button>
+    </div>
+  </div>
+
+  <div id="loadingSpinner">
+    <i class="fa-solid fa-spinner fa-spin fa-2x" style="color:var(--accent-primary);"></i>
+    <p style="margin-top:10px; font-size:12px;" id="loadingText">Đang tải dữ liệu...</p>
+  </div>
+
+  <!-- FIREBASE SDK V9 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+    // MÃ CẤU HÌNH DỰ ÁN CỦA BRO
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZ9C-BQcEIwLvjUjzwJqFttC1i7Y11EMk",
+      authDomain: "quanlythietke-5ef74.firebaseapp.com",
+      projectId: "quanlythietke-5ef74",
+      storageBucket: "quanlythietke-5ef74.firebasestorage.app",
+      messagingSenderId: "662183981754",
+      appId: "1:662183981754:web:f96fc697baf2a47e948883",
+      measurementId: "G-5BV5C7CVBM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    window.db = db;
+    window.storage = storage;
+    window.fbAddDoc = addDoc;
+    window.fbDeleteDoc = deleteDoc;
+    window.fbDoc = doc;
+    window.fbCollection = collection;
+    window.fbRef = ref;
+    window.fbUploadBytes = uploadBytes;
+    window.fbGetDownloadURL = getDownloadURL;
+    window.fbDeleteObject = deleteObject;
+
+    // Lắng nghe dữ liệu realtime từ Firebase Cloud
+    const q = query(collection(db, "drawings"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const docs = [];
+      snapshot.forEach((doc) => {
+        docs.push({ id: doc.id, ...doc.data() });
+      });
+      window.cachedDocs = docs;
+      renderData(docs);
+    });
+  </script>
+
+  <script>
+    let currentTargetType = 'design', currentBranchFilter = 'all', currentTimeFilter = 'all';
+    window.cachedDocs = [];
+
+    function showLoading(text) {
+      document.getElementById('loadingText').innerText = text;
+      document.getElementById('loadingSpinner').style.display = 'block';
+    }
+    function hideLoading() { document.getElementById('loadingSpinner').style.display = 'none'; }
+
+    function toggleSidebar() { document.getElementById('mainSidebar').classList.toggle('open'); }
+    function toggleFolder(headerEl) { headerEl.parentElement.classList.toggle('open'); }
+
+    function switchSegment(id, btn) {
+      document.getElementById('designTab').style.display = 'none'; 
+      document.getElementById('shopTab').style.display = 'none';
+      document.getElementById('bptcTab').style.display = 'none';
+      document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).style.display = 'block'; 
+      btn.classList.add('active'); 
+      filterCards();
+    }
+
+    function filterByBranch(b, el) { currentBranchFilter = b; document.querySelectorAll('.tree-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); filterCards(); }
+    function filterByTime(t, el) { currentTimeFilter = t; document.querySelectorAll('.time-chip').forEach(c => c.classList.remove('active')); el.classList.add('active'); filterCards(); }
+
+    function filterCards() {
+      const searchKey = document.getElementById('searchInput').value.toLowerCase();
+      let activeTabId = 'designListContent';
+      if(document.getElementById('shopTab').style.display !== 'none') activeTabId = 'shopListContent';
+      if(document.getElementById('bptcTab').style.display !== 'none') activeTabId = 'bptcListContent';
+
+      document.querySelectorAll(`#${activeTabId} .tree-folder`).forEach(folder => {
+        const text = folder.innerText.toLowerCase(), branch = folder.getAttribute('data-branch'), cardTime = folder.getAttribute('data-time');
+        const mSearch = text.includes(searchKey), mBranch = currentBranchFilter === 'all' || branch === currentBranchFilter, mTime = currentTimeFilter === 'all' || cardTime === currentTimeFilter;
+        folder.style.display = (mSearch && mBranch && mTime) ? 'block' : 'none';
+      });
+    }
+
+    function renderData(db) {
+      document.getElementById('designListContent').innerHTML = '';
+      document.getElementById('shopListContent').innerHTML = '';
+      document.getElementById('bptcListContent').innerHTML = '';
+
+      const groups = {};
+
+      db.forEach(item => {
+        const key = `${item.tabType}_${item.code}`;
+        if (!groups[key]) groups[key] = { info: item, revs: [] };
+        groups[key].revs.push(item);
+      });
+
+      for (let k in groups) {
+        const group = groups[k];
+        const info = group.info;
+        let containerId = `${info.tabType}ListContent`;
+
+        let revsHTML = group.revs.map(r => `
+          <div class="item-card" onclick="loadViewerFromURL('${r.fileUrl}', '${r.fileType}', '${r.code} • ${r.rev} (${r.statusText})', this)">
+            <i class="fa-solid fa-trash-can btn-delete-item" title="Xóa Rev này" onclick="deleteDocItem(event, '${r.id}', '${r.storagePath}')"></i>
+            <div class="card-top">
+              <div class="card-code">${r.rev} • ${r.statusText}</div>
+              <span class="status-tag ${r.statusTag}">${r.statusText}</span>
+            </div>
+            <div class="card-title">${r.name}</div>
+            <div class="card-meta-grid">
+              <div><i class="fa-solid fa-calendar"></i> ${r.dateVal}</div>
+              <div><i class="fa-solid fa-user"></i> ${r.author}</div>
+            </div>
+          </div>
+        `).join('');
+
+        let folderHTML = `
+          <div class="tree-folder open" data-branch="${info.branch}" data-time="${info.dateVal ? info.dateVal.substring(0, 7) : ''}">
+            <div class="folder-header" onclick="toggleFolder(this)">
+              <div class="folder-title-box">
+                <i class="fa-solid fa-chevron-right arrow"></i>
+                <i class="fa-solid fa-folder-closed" style="color:var(--accent-primary);"></i>
+                <span class="folder-name-text">${info.code}</span>
+              </div>
+              <div class="folder-actions-btns">
+                <i class="fa-solid fa-plus btn-add-rev" title="Thêm Rev vào thư mục này" onclick="openAddRevToFolder(event, '${info.code}', '${info.branch}', '${info.tabType}')"></i>
+                <i class="fa-solid fa-trash-can btn-delete-folder" title="Xóa toàn bộ thư mục" onclick="deleteFolderGroup(event, '${info.tabType}', '${info.code}')"></i>
+              </div>
+            </div>
+            <div class="folder-content">
+              ${revsHTML}
+            </div>
+          </div>
+        `;
+
+        const container = document.getElementById(containerId);
+        if(container) container.insertAdjacentHTML('beforeend', folderHTML);
+      }
+      filterCards();
+    }
+
+    async function deleteDocItem(event, id, storagePath) {
+      event.stopPropagation();
+      if (confirm("Bro có chắc muốn xóa bản duyệt này trên Cloud không?")) {
+        showLoading("Đang xóa dữ liệu...");
+        try {
+          if(storagePath) {
+            const fileRef = window.fbRef(window.storage, storagePath);
+            await window.fbDeleteObject(fileRef).catch(() => {});
+          }
+          await window.fbDeleteDoc(window.fbDoc(window.db, "drawings", id));
+        } catch(e) {
+          alert("Lỗi khi xóa: " + e.message);
+        }
+        hideLoading();
+      }
+    }
+
+    async function deleteFolderGroup(event, tabType, code) {
+      event.stopPropagation();
+      if (confirm("Bro có chắc muốn xóa TOÀN BỘ thư mục này trên Cloud không?")) {
+        showLoading("Đang xóa toàn bộ thư mục...");
+        const itemsToDelete = window.cachedDocs.filter(i => i.tabType === tabType && i.code === code);
+        for(let item of itemsToDelete) {
+          if(item.storagePath) {
+            await window.fbDeleteObject(window.fbRef(window.storage, item.storagePath)).catch(() => {});
+          }
+          await window.fbDeleteDoc(window.fbDoc(window.db, "drawings", item.id));
+        }
+        hideLoading();
+      }
+    }
+
+    function openAddRevToFolder(event, folderCode, branch, tabType) {
+      event.stopPropagation();
+      currentTargetType = tabType;
+      
+      const existingRevs = window.cachedDocs.filter(item => item.tabType === tabType && item.code === folderCode).length;
+      const nextRevNum = String(existingRevs + 1).padStart(2, '0');
+
+      document.getElementById('inputCode').value = folderCode;
+      document.getElementById('inputBranch').value = branch;
+      document.getElementById('inputRev').value = `Rev ${nextRevNum}`;
+      document.getElementById('inputFile').value = '';
+      document.getElementById('modalHeaderTitle').innerText = `Thêm Rev Mới Vào: ${folderCode}`;
+      document.getElementById('uploadModal').style.display = 'flex';
+    }
+
+    function openUploadModal(type) { 
+      currentTargetType = type; 
+      document.getElementById('inputCode').value = '';
+      document.getElementById('inputRev').value = 'Rev 01';
+      document.getElementById('inputFile').value = '';
+      document.getElementById('modalHeaderTitle').innerText = 'Đăng Ký Hồ Sơ / Folder Mới';
+      document.getElementById('uploadModal').style.display = 'flex'; 
+    }
+    
+    function closeUploadModal() { document.getElementById('uploadModal').style.display = 'none'; }
+
+    async function saveNewDocument() {
+      const branch = document.getElementById('inputBranch').value;
+      const dateVal = document.getElementById('inputDate').value || '2026-08-31';
+      const code = document.getElementById('inputCode').value.trim() || 'MỤC MỚI';
+      const rev = document.getElementById('inputRev').value.trim() || 'Rev 01';
+      const statusTag = document.getElementById('inputStatus').value;
+      const statusText = statusTag === 'tag-a' ? 'Duyệt A' : (statusTag === 'tag-b' ? 'Duyệt B' : 'Duyệt C');
+      const name = document.getElementById('inputName').value.trim() || 'Chi tiết cập nhật';
+      const fileInput = document.getElementById('inputFile');
+
+      if (fileInput.files.length === 0) {
+        alert("Bro vui lòng chọn file PDF hoặc Ảnh bản vẽ từ máy tính nhé!");
+        return;
+      }
+
+      showLoading("Đang tải file lên Cloud...");
+      const file = fileInput.files[0];
+      const fileType = file.type.includes('pdf') ? 'pdf' : 'image';
+      const storagePath = `drawings/${Date.now()}_${file.name}`;
+      const storageRef = window.fbRef(window.storage, storagePath);
+
+      try {
+        await window.fbUploadBytes(storageRef, file);
+        const downloadURL = await window.fbGetDownloadURL(storageRef);
+
+        const newItem = {
+          tabType: currentTargetType,
+          branch, dateVal, code, rev, statusTag, statusText, name,
+          fileUrl: downloadURL,
+          storagePath: storagePath,
+          fileType: fileType,
+          fileName: file.name,
+          author: "Lê Nguyễn Quang Phong",
+          timestamp: Date.now()
+        };
+
+        await window.fbAddDoc(window.fbCollection(window.db, "drawings"), newItem);
+        
+        loadViewerFromURL(downloadURL, fileType, `${code} • ${rev} (${statusText})`, null);
+        closeUploadModal();
+        alert("Đã upload & lưu bản vẽ thành công lên Cloud!");
+      } catch(err) {
+        alert("Lỗi upload: " + err.message);
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function loadViewerFromURL(url, fileType, title, el) {
+      if(el) {
+        document.querySelectorAll('.item-card').forEach(c => c.style.borderColor = 'var(--border-color)');
+        el.style.borderColor = 'var(--accent-primary)';
+      }
+      document.getElementById('currentDocTitle').innerText = title;
+
+      const frame = document.getElementById('viewFrame');
+      const img = document.getElementById('imgViewer');
+      const dlBtn = document.getElementById('downloadBtn');
+
+      dlBtn.href = url;
+      dlBtn.style.display = 'flex';
+
+      if (fileType === 'pdf') {
+        img.style.display = 'none';
+        frame.style.display = 'block';
+        frame.src = url;
+      } else {
+        frame.style.display = 'none';
+        img.style.display = 'block';
+        img.src = url;
+      }
+
+      document.getElementById('mainSidebar').classList.remove('open');
+    }
+  </script>
+</body>
+</html>
